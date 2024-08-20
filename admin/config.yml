@@ -1,0 +1,538 @@
+backend:
+  name: git-gateway
+  accept_roles:
+    - admin
+    - editor
+  branch: master
+media_folder: theme/assets/images
+public_folder: /assets/images
+collections:
+  - name: pages
+    label: Pages
+    identifier_field: title
+    extension: md
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    folder: cms/pages
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Publish Date
+        name: date
+        widget: datetime
+      - label: Layout
+        widget: hidden
+        name: layout
+        default: '{{slug}}.html'
+      - &ref_0
+        label: Seo
+        name: seo
+        widget: object
+        collapsed: true
+        fields:
+          - label: Title
+            name: title
+            widget: string
+            required: false
+          - label: Description
+            name: description
+            widget: string
+            required: false
+          - label: No index
+            name: noindex
+            widget: boolean
+            default: false
+            required: false
+          - label: Open Graph Title
+            name: og:title
+            widget: string
+            required: false
+          - label: Open Graph Image
+            name: og:image
+            widget: image
+            required: false
+            media_library:
+              config:
+                multiple: false
+          - label: Twitter Title
+            name: twitter:title
+            widget: string
+            default: summary
+            required: false
+          - label: Twitter Card
+            name: twitter:card
+            widget: string
+            default: summary
+            required: false
+          - label: Twitter Site
+            name: twitter:site
+            widget: string
+            required: false
+          - label: Twitter Creator
+            name: twitter:creator
+            widget: string
+            required: false
+          - label: Twitter Image
+            name: twitter:image
+            widget: image
+            required: false
+            media_library:
+              config:
+                multiple: false
+          - label: Additional HTML tags
+            name: additional_tags
+            widget: text
+            required: false
+  - name: projects
+    label: Projects
+    folder: cms/projects
+    create: true
+    identifier_field: name
+    extension: md
+    slug: '{{slug}}'
+    fields:
+      - hint: ''
+        name: title
+        label: Project Name
+        widget: string
+        required: true
+      - hint: ''
+        name: created-on
+        label: Created On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: updated-on
+        label: Updated On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: published-on
+        label: Published On
+        widget: datetime
+        required: false
+      - label: Description
+        name: body
+        widget: markdown
+        required: false
+      - hint: ''
+        name: f_project-name-accent-text
+        label: Project Name Accent Text
+        widget: string
+        required: false
+      - hint: 'ex: White ash'
+        name: f_material
+        label: Material
+        widget: string
+        required: true
+      - hint: Type of finish used on project
+        name: f_finish
+        label: Finish
+        widget: string
+        required: true
+      - hint: 'ex: 13”L x 13”D x 16 1/2”H'
+        name: f_dimensions
+        label: Dimensions
+        widget: string
+        required: true
+      - hint: >-
+          The image that shows up on the project page and the top of the detail
+          page
+        name: f_highlight-image
+        label: Highlight Image
+        widget: object
+        required: true
+        fields:
+          - hint: ''
+            name: url
+            label: Image
+            widget: image
+            required: true
+            allow_multiple: false
+          - hint: Image Alt
+            name: alt
+            label: alt
+            widget: string
+            required: false
+      - hint: Images to show up on detail page (not including highlight)
+        name: f_additional-project-images
+        label: Additional Project Images
+        widget: list
+        required: false
+        fields:
+          - hint: ''
+            name: url
+            label: Image
+            widget: image
+            required: false
+            allow_multiple: false
+          - hint: Image Alt
+            name: alt
+            label: alt
+            widget: string
+            required: false
+      - hint: Decides where in the project list the project sits
+        name: f_sort-order
+        label: Sort Order
+        widget: number
+        required: true
+      - label: Tags
+        widget: hidden
+        name: tags
+        default: projects
+      - label: Layout
+        widget: hidden
+        name: layout
+        default: '[projects].html'
+      - label: Publish Date
+        name: date
+        widget: datetime
+      - *ref_0
+  - label: Theme Settings
+    name: settings
+    identifier_field: title
+    extension: json
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    files:
+      - label: General
+        name: site
+        file: cms/_data/settings/site.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: General
+          - hint: Full domain url (needed for a correct sitemap file)
+            name: domain
+            label: Domain
+            widget: string
+            required: false
+          - name: favicon
+            label: Favicon
+            widget: image
+            allow_multiple: false
+            required: false
+          - name: apple_touch_icon
+            label: Apple Touch Icon
+            widget: image
+            allow_multiple: false
+            required: false
+          - name: header_additional_content
+            label: Additional Content Header
+            hint: Content here will be placed before </head> tag
+            widget: text
+            required: false
+          - name: footer_additional_content
+            label: Additional Content Footer
+            hint: Content here will be placed before </body> tag
+            widget: text
+            required: false
+          - name: images_optimization
+            label: Images Optimization
+            widget: object
+            collapsed: false
+            fields:
+              - label: Image Formats
+                name: formats
+                widget: select
+                multiple: true
+                options:
+                  - label: Avif
+                    value: avif
+                  - label: Webp
+                    value: webp
+              - label: Image Dimensions
+                name: dimensions
+                widget: select
+                multiple: true
+                options:
+                  - label: '500'
+                    value: 500
+                  - label: '800'
+                    value: 800
+                  - label: '1080'
+                    value: 1080
+                  - label: '1600'
+                    value: 1600
+                  - label: '2000'
+                    value: 2000
+                  - label: '2600'
+                    value: 2600
+      - label: Colors
+        name: colors
+        file: cms/_data/colors.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Colors
+      - label: Texts
+        name: texts
+        file: cms/_data/texts.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Texts
+          - hint: 'Original text: Page Not Found, key: -40b0787c'
+            label: Text
+            name: '-40b0787c'
+            widget: string
+          - hint: >-
+              Original text: The page you are looking for doesn't exist or has
+              been moved, key: 556d64d8
+            label: Text
+            name: 556d64d8
+            widget: string
+          - hint: 'Original text: Go Home, key: 6b29b517'
+            label: Text
+            name: 6b29b517
+            widget: string
+          - hint: 'Original text: Protected Page, key: -11d4bbff'
+            label: Text
+            name: '-11d4bbff'
+            widget: string
+          - hint: >-
+              Original text: Incorrect password. Please try again., key:
+              -f5c4b5f
+            label: Text
+            name: '-f5c4b5f'
+            widget: string
+          - hint: 'Original text: finding a balance of, key: 48a355f1'
+            label: Text
+            name: 48a355f1
+            widget: string
+          - hint: 'Original text: human & nature., key: 1c67df3a'
+            label: Text
+            name: 1c67df3a
+            widget: string
+          - hint: 'Original text: Coming soon!, key: -717a9fb9'
+            label: Text
+            name: '-717a9fb9'
+            widget: string
+          - hint: 'Original text: projects, key: -3b86e786'
+            label: Text
+            name: '-3b86e786'
+            widget: string
+          - hint: 'Original text: about, key: 585238d'
+            label: Text
+            name: 585238d
+            widget: string
+          - hint: >-
+              Original text: Furniture & Objects inspired by daily living., key:
+              -7652c6c9
+            label: Text
+            name: '-7652c6c9'
+            widget: string
+          - hint: >-
+              Original text: Paying close attention to small details, using
+              materials with a conscious. A walk through the city into the
+              woods, formations by the sea, light and shadows dancing through
+              seasons of memory, your childhood home, a place in history, built
+              from a feeling a spark of curiosity. Made from life, made for
+              life. , key: -3332a5c0
+            label: Text
+            name: '-3332a5c0'
+            widget: text
+          - hint: "Original text: \_ö, key: 1456"
+            label: Text
+            name: '1456'
+            widget: string
+          - hint: 'Original text: No items found., key: 3d503d2b'
+            label: Text
+            name: 3d503d2b
+            widget: string
+          - hint: >-
+              Original text: Happy Medium was created in the spirit of balance,
+              a common thread beyond the tangible striving for balance within
+              daily living, extending into thoughtful furniture and objects. Our
+              goal is to bring the beauty and calm of nature into your space,
+              finding a balance of human and nature., key: -10091d75
+            label: Text
+            name: '-10091d75'
+            widget: text
+          - hint: >-
+              Original text: We are a design and manufacturing studio based on
+              Vancouver Island, founded by Skylar Klassen. With a focus on
+              design and furniture while exploring new materials and spaces in
+              between. Using a mix of traditional techniques and embracing the
+              world of new technologies, creating harmony. With a core belief
+              that durability is sustainability, we are on the constant pursuit
+              of quality and balance., key: -7b15e667
+            label: Text
+            name: '-7b15e667'
+            widget: text
+          - hint: >-
+              Original text: All is made to order. Open to custom projects,
+              commissions and collaborations. Delivery & shipping available.,
+              key: -657ac04f
+            label: Text
+            name: '-657ac04f'
+            widget: text
+          - hint: >-
+              Original text: Reach out if you have questions or would like to
+              create something together,, key: -2ffe93ba
+            label: Text
+            name: '-2ffe93ba'
+            widget: string
+          - hint: 'Original text: ‍, key: 200d'
+            label: Text
+            name: 200d
+            widget: string
+          - hint: 'Original text: studio@happy-medium.ca, key: -c322fa0'
+            label: Text
+            name: '-c322fa0'
+            widget: string
+          - hint: 'Original text: materials, key: 2899402c'
+            label: Text
+            name: 2899402c
+            widget: string
+          - hint: 'Original text: finish, key: -4bf6736d'
+            label: Text
+            name: '-4bf6736d'
+            widget: string
+          - hint: 'Original text: dimensions, key: 18b23fcd'
+            label: Text
+            name: 18b23fcd
+            widget: string
+          - hint: 'Original text: Inquire, key: -2834de6d'
+            label: Text
+            name: '-2834de6d'
+            widget: string
+          - hint: 'Original text: <, key: 3c'
+            label: Text
+            name: 3c
+            widget: string
+          - hint: 'Original text: >, key: 3e'
+            label: Text
+            name: 3e
+            widget: string
+      - label: Links
+        name: links
+        file: cms/_data/links.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Links
+          - hint: 'Original link: #, key: 23'
+            label: Link
+            name: '23'
+            widget: string
+          - hint: 'Original link: /projects/, key: -5bda445a'
+            label: Link
+            name: '-5bda445a'
+            widget: string
+          - hint: 'Original link: /about/, key: 61642f31'
+            label: Link
+            name: 61642f31
+            widget: string
+          - hint: 'Original link: /, key: 2f'
+            label: Link
+            name: 2f
+            widget: string
+          - hint: >-
+              Original link: https://www.instagram.com/happy_medium_studio/,
+              key: -17ac6ca2
+            label: Link
+            name: '-17ac6ca2'
+            widget: string
+          - hint: 'Original link: mailto:studio@happy-medium.ca, key: dc16668'
+            label: Link
+            name: dc16668
+            widget: string
+      - label: Images
+        name: images
+        file: cms/_data/images.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Images
+          - label: Image
+            name: '-2b1beb3c'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: 4abef31c
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-3ccc5edb'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '56904976'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '0'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-325b380a'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+publish_mode: editorial_workflow
